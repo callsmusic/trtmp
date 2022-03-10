@@ -1,0 +1,26 @@
+{
+  "name": "TRTMP",
+  "description": "Go live easily and stream videos in Telegram channels.",
+  "repository": "https://github.com/callsmusic/trtmp",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Your bot’s token obtained from @BotFather.",
+      "required": true
+    },
+    "RTMP_KEY": {
+      "description": "The RTMP key of your channel’s live stream.",
+      "required": true
+    },
+    "RTMP_URL": {
+      "description": "The RTMP URL of your channel’s live stream",
+      "required": true
+    }
+  },
+  "stack": "container",
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}
