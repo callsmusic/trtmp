@@ -1,3 +1,5 @@
+PATH=$(pwd):${PATH}
+
 wget -q https://yt-dl.org/downloads/latest/youtube-dl
 chmod +x youtube-dl
 
