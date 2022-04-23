@@ -3,6 +3,7 @@ package streamer
 import (
 	"bot/processor"
 	"bot/ytdl"
+	"errors"
 	"fmt"
 	"net/url"
 
@@ -15,7 +16,10 @@ type Item struct {
 	Video *ytdl.Video
 }
 
-var now Item
+var (
+	now             Item
+	errSignalKilled = errors.New("signal: killed")
+)
 
 func Stream(b *gotgbot.Bot, input string, user *gotgbot.User) error {
 	var video *ytdl.Video
@@ -33,6 +37,9 @@ func Stream(b *gotgbot.Bot, input string, user *gotgbot.User) error {
 			err, ok := <-errc
 			if !ok {
 				break
+			}
+			if errSignalKilled.Error() == err.Error() {
+				continue
 			}
 			b.SendMessage(user.Id, fmt.Sprintf("Failed to process: %s", err.Error()), nil)
 		}
