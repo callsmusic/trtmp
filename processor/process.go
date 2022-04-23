@@ -40,7 +40,7 @@ var (
 	args = []string{
 		"-re",
 		"-stream_loop", "-1",
-		"-loglevel", "fatal",
+		"-loglevel", "error",
 		"-i", "",
 		"-preset", "ultrafast",
 		"-c:v", "libx264",
@@ -83,8 +83,7 @@ func Process(input string, errc chan error) error {
 		return err
 	}
 	process = exec.Command(getName(), args...)
-	process.Stdout = os.Stdout
-	process.Stdin = os.Stdin
+	process.Stderr = os.Stderr
 	err = process.Start()
 	if err == nil {
 		go func() {
