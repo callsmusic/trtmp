@@ -73,7 +73,7 @@ func Stop() (bool, error) {
 }
 
 func Process(input string) error {
-	if process != nil {
+	if Processing() {
 		if _, err := Stop(); err != nil {
 			return err
 		}
