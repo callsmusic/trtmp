@@ -72,7 +72,7 @@ func Stop() (bool, error) {
 	return false, nil
 }
 
-func Process(input string) error {
+func Process(input string, errc chan error) error {
 	if Processing() {
 		if _, err := Stop(); err != nil {
 			return err
@@ -88,7 +88,11 @@ func Process(input string) error {
 	err = process.Start()
 	if err == nil {
 		go func() {
-			process.Wait()
+			err = process.Wait()
+			if err != nil {
+				errc <- err
+				close(errc)
+			}
 			Stop()
 		}()
 	}

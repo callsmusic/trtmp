@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -33,13 +34,14 @@ func commandStream(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err := ctx.Message.Reply(b, "No input provided.", nil)
 		return err
 	}
+	// status,
 	status, err := ctx.Message.Reply(b, "Processing...", nil)
 	if err != nil {
 		return err
 	}
-	if err = streamer.Stream(input, ctx.Message.From); err != nil {
-		return err
+	err = streamer.Stream(b, input, ctx.Message.From)
+	if err != nil {
+		_, _, err = status.EditText(b, fmt.Sprintf("Failed to start processing: %s", err.Error()), nil)
 	}
-	_, _, err = status.EditText(b, "Streaming...", nil)
 	return err
 }

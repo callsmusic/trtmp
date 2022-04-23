@@ -3,6 +3,7 @@ package streamer
 import (
 	"bot/processor"
 	"bot/ytdl"
+	"fmt"
 	"net/url"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -16,7 +17,7 @@ type Item struct {
 
 var now Item
 
-func Stream(input string, user *gotgbot.User) error {
+func Stream(b *gotgbot.Bot, input string, user *gotgbot.User) error {
 	var video *ytdl.Video
 	origInput := input
 	_, err := url.ParseRequestURI(input)
@@ -26,11 +27,23 @@ func Stream(input string, user *gotgbot.User) error {
 			input = video.Url
 		}
 	}
-	err = processor.Process(input)
+	errc := make(chan error)
+	go func() {
+		for {
+			err, ok := <-errc
+			if !ok {
+				break
+			}
+			b.SendMessage(user.Id, fmt.Sprintf("Failed to process: %s", err.Error()), nil)
+		}
+	}()
+	err = processor.Process(input, errc)
 	if err == nil {
 		now.Input = origInput
 		now.User = user
 		now.Video = video
+	} else {
+		close(errc)
 	}
 	return err
 }
