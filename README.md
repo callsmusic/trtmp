@@ -10,10 +10,6 @@ A bot for streaming in Telegram live streams.
 
 ### Manually
 
-#### Prerequisites
-
-- [youtube-dl](http://ytdl-org.github.io/youtube-dl/)
-
 #### Install
 
 1. Create a new directory.
